@@ -13,4 +13,36 @@ export class UsersService {
 
     return this.repo.save(user);
   }
+
+  findOneById(id: number) {
+    return this.repo.findOneBy({ id });
+  }
+
+  findOneByEmail(email: string) {
+    return this.repo.find({ where: { email } });
+  }
+
+  // Partial<User> is a type that represents all of the properties of User,
+  // but makes them all optional.
+  async update(id: number, attrs: Partial<User>) {
+    const user = await this.findOneById(id);
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    // Object.assign() is a built-in function
+    // that copies the properties of one object
+    Object.assign(user, attrs);
+    return this.repo.save(user);
+  }
+
+  async remove(id: number) {
+    const user = await this.findOneById(id);
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    // remove(entity) will call AfterRemove() hook
+    return this.repo.remove(user);
+  }
 }
