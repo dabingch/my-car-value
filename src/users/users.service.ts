@@ -30,9 +30,11 @@ export class UsersService {
       throw new Error('User not found');
     }
 
+    console.log('attrs', attrs);
     // Object.assign() is a built-in function
     // that copies the properties of one object
     Object.assign(user, attrs);
+
     return this.repo.save(user);
   }
 
