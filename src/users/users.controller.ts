@@ -8,8 +8,6 @@ import {
   Delete,
   Query,
   NotFoundException,
-  UseInterceptors,
-  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { CreateUserDto } from './dtos/create-user.dto';
@@ -18,6 +16,7 @@ import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { UserDto } from './dtos/user.dto';
 
 @Controller('auth')
+@Serialize(UserDto)
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
@@ -28,10 +27,9 @@ export class UsersController {
 
   // Turn an instance of User into a plain object based on some rules
   // @UseInterceptors(new SerializeInterceptor(UserDto))
-  @Serialize(UserDto)
+  // @Serialize(UserDto)
   @Get(':id')
   async findUser(@Param('id') id: string) {
-    console.log('handler is running');
     const user = await this.usersService.findOneById(parseInt(id));
 
     if (!user) {
