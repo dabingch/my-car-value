@@ -29,6 +29,11 @@ export class UsersController {
     return this.authService.signup(body.email, body.password);
   }
 
+  @Post('signin')
+  signin(@Body() body: CreateUserDto) {
+    return this.authService.signin(body.email, body.password);
+  }
+
   // Turn an instance of User into a plain object based on some rules
   // @UseInterceptors(new SerializeInterceptor(UserDto))
   // @Serialize(UserDto)
