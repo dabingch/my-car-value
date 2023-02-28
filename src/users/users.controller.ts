@@ -56,6 +56,11 @@ export class UsersController {
     return user;
   }
 
+  @Post('signout')
+  signOut(@Session() session: any) {
+    session.userId = null;
+  }
+
   // Turn an instance of User into a plain object based on some rules
   // @UseInterceptors(new SerializeInterceptor(UserDto))
   // @Serialize(UserDto)
