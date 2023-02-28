@@ -9,6 +9,7 @@ import {
   Query,
   NotFoundException,
   Session,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { CreateUserDto } from './dtos/create-user.dto';
@@ -16,28 +17,28 @@ import { UsersService } from './users.service';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { UserDto } from './dtos/user.dto';
 import { AuthService } from './auth.service';
+import { CurrentUser } from './decorators/current-user.decorator';
+import { CurrentUserInterceptor } from './interceptors/current-user.interceptor';
+import { User } from './user.entity';
 
 @Controller('auth')
 @Serialize(UserDto)
+@UseInterceptors(CurrentUserInterceptor)
 export class UsersController {
   constructor(
     private usersService: UsersService,
     private authService: AuthService,
   ) {}
 
-  // @Get('colors/:color')
-  // setColor(@Param('color') color: string, @Session() session: any) {
-  //   session.color = color;
+  // @Get('whoami')
+  // whoAmI(@Session() session: any) {
+  //   return this.usersService.findOneById(session.userId);
   // }
 
-  // @Get('colors')
-  // getColor(@Session() session: any) {
-  //   return session.color;
-  // }
-
+  // Make a custom decorator
   @Get('whoami')
-  whoAmI(@Session() session: any) {
-    return this.usersService.findOneById(session.userId);
+  whoAmI(@CurrentUser() user: User) {
+    return user;
   }
 
   @Post('signup')
