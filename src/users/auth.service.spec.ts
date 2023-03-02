@@ -10,11 +10,24 @@ describe('AuthService', () => {
 
   beforeEach(async () => {
     // Create a fake copy of the users service
+    const users: User[] = [];
     fakeUsersService = {
-      findAllByEmail: () => Promise.resolve([]),
+      findAllByEmail: (email: string) => {
+        const filteredUsers = users.filter((user) => user.email === email);
+        return Promise.resolve(filteredUsers);
+      },
       // Create a fake user for unit testing
-      create: (email: string, password: string) =>
-        Promise.resolve({ id: 1, email, password } as User),
+      create: (email: string, password: string) => {
+        // Promise.resolve({ id: 1, email, password } as User),
+        const user = {
+          id: Math.floor(Math.random() * 99999),
+          email,
+          password,
+        } as User;
+        users.push(user);
+
+        return Promise.resolve(user);
+      },
     };
 
     const module = await Test.createTestingModule({
@@ -44,10 +57,12 @@ describe('AuthService', () => {
   });
 
   it('throws an error if user signs up with email that is in use', async () => {
-    fakeUsersService.findAllByEmail = () =>
-      Promise.resolve([
-        { id: 1, email: 'test@test.com', password: 'test' } as User,
-      ]);
+    // fakeUsersService.findAllByEmail = () =>
+    //   Promise.resolve([
+    //     { id: 1, email: 'test@test.com', password: 'test' } as User,
+    //   ]);
+
+    await service.signup('test@test.com', 'test');
 
     await expect(service.signup('test@test.com', 'test')).rejects.toThrow(
       BadRequestException,
@@ -61,8 +76,10 @@ describe('AuthService', () => {
   });
 
   it('throws an error if an invalid password is provided', async () => {
-    fakeUsersService.findAllByEmail = () =>
-      Promise.resolve([{ email: 'test@test.com', password: 'test' } as User]);
+    // fakeUsersService.findAllByEmail = () =>
+    //   Promise.resolve([{ email: 'test@test.com', password: 'test' } as User]);
+
+    await service.signup('test@test.com', 'password');
 
     await expect(service.signin('test@test.com', 'test')).rejects.toThrow(
       BadRequestException,
@@ -70,14 +87,16 @@ describe('AuthService', () => {
   });
 
   it('return a user if correct password is provided', async () => {
-    fakeUsersService.findAllByEmail = () =>
-      Promise.resolve([
-        {
-          email: 'test@test.com',
-          password:
-            '6e74a94936803e1b.60126d23d708455eb3353f3dc9eb8b6c61aab1bf1549fdf365f5416a162b7f6e',
-        } as User,
-      ]);
+    // fakeUsersService.findAllByEmail = () =>
+    //   Promise.resolve([
+    //     {
+    //       email: 'test@test.com',
+    //       password:
+    //         '6e74a94936803e1b.60126d23d708455eb3353f3dc9eb8b6c61aab1bf1549fdf365f5416a162b7f6e',
+    //     } as User,
+    //   ]);
+
+    await service.signup('test@test.com', 'test');
 
     const user = await service.signin('test@test.com', 'test');
     expect(user).toBeDefined();
