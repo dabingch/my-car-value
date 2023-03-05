@@ -24,9 +24,10 @@ import { User } from './user.entity';
 import { AuthGuard } from '../guards/auth.guard';
 
 @Controller('auth')
-@Serialize(UserDto)
+@Serialize(UserDto) // Globally apply this interceptor to all routes
 // @UseInterceptors(CurrentUserInterceptor)
 export class UsersController {
+  // Private can make the service instance be auto injected
   constructor(
     private usersService: UsersService,
     private authService: AuthService,
@@ -37,9 +38,10 @@ export class UsersController {
   //   return this.usersService.findOneById(session.userId);
   // }
 
-  // Make a custom decorator
   @Get('whoami')
+  // Guard to check if a user is logged in
   @UseGuards(AuthGuard)
+  // @CurrentUser: Make a custom decorator
   whoAmI(@CurrentUser() user: User) {
     return user;
   }

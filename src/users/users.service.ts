@@ -8,12 +8,14 @@ export class UsersService {
   // Private does not need to Initialize instance
   constructor(@InjectRepository(User) private repo: Repository<User>) {}
 
+  // Create a new user
   create(email: string, password: string) {
     const user = this.repo.create({ email, password });
 
     return this.repo.save(user);
   }
 
+  // Find a user by id
   findOneById(id: number) {
     if (!id) {
       return null;
@@ -22,12 +24,14 @@ export class UsersService {
     return this.repo.findOneBy({ id });
   }
 
+  // Find all users by a given email
   findAllByEmail(email: string) {
     return this.repo.find({ where: { email } });
   }
 
   // Partial<User> is a type that represents all of the properties of User,
   // but makes them all optional.
+  // Update a user by a id with partial attributes
   async update(id: number, attrs: Partial<User>) {
     const user = await this.findOneById(id);
     if (!user) {
@@ -42,6 +46,7 @@ export class UsersService {
     return this.repo.save(user);
   }
 
+  // Remove a user with a given id
   async remove(id: number) {
     const user = await this.findOneById(id);
     if (!user) {

@@ -7,12 +7,15 @@ import { UsersService } from './users.service';
 import { randomBytes, scrypt as _scrypt } from 'crypto';
 import { promisify } from 'util';
 
+// Convert scrypt to a promise-based function
+// promisify() is a built-in function to return a promise
 const scrypt = promisify(_scrypt);
 
 @Injectable()
 export class AuthService {
   constructor(private usersService: UsersService) {}
 
+  // Sign up a user with the given email and password
   async signup(email: string, password: string) {
     // See if email is in use
     const users = await this.usersService.findAllByEmail(email);
@@ -38,6 +41,7 @@ export class AuthService {
     return user;
   }
 
+  // Sign in a user with the given email and password
   async signin(email: string, password: string) {
     const [user] = await this.usersService.findAllByEmail(email);
 
