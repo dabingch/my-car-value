@@ -23,6 +23,9 @@ export class User {
   // @Exclude() // Exclude password from response
   password: string;
 
+  @Column({ default: true })
+  admin: boolean;
+
   // The first argument to @OneToMany is the entity class
   // The second argument is a function that
   // returns the property on the other side of the relationship
