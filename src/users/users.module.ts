@@ -6,7 +6,7 @@ import { UsersService } from './users.service';
 import { AuthService } from './auth.service';
 import { User } from './user.entity';
 // import { CurrentUserInterceptor } from './interceptors/current-user.interceptor';
-import { CurrentUserMiddle } from './middlewares/current-user.middleware';
+import { CurrentUserMiddleware } from './middlewares/current-user.middleware';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User])], // Create repository for User entity
@@ -24,6 +24,6 @@ import { CurrentUserMiddle } from './middlewares/current-user.middleware';
 })
 export class UsersModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(CurrentUserMiddle).forRoutes('*');
+    consumer.apply(CurrentUserMiddleware).forRoutes('*');
   }
 }

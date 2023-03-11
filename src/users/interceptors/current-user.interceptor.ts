@@ -6,6 +6,10 @@ import {
 } from '@nestjs/common';
 import { UsersService } from '../users.service';
 
+/**
+ * This interceptor will run before any route handler
+ * It will check if there is a userId in the session
+ */
 @Injectable()
 export class CurrentUserInterceptor implements NestInterceptor {
   constructor(private usersService: UsersService) {}
